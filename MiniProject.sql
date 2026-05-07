@@ -108,7 +108,7 @@ FROM customer;
 
 -- 2
 SELECT * FROM customer
-ORDER BY (NOW() - YEAR(dob)) LIMIT 3
+ORDER BY (YEAR(NOW()) - YEAR(dob)) ASC LIMIT 3
 
 -- 5
 select * from product
