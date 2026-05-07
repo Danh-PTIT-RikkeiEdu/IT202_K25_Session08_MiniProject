@@ -82,3 +82,16 @@ VALUES
 (3, 3, 3, 1350000),
 (4, 4, 2, 240000),
 (5, 6, 1, 2500000);
+
+
+-- Quyên
+
+SELECT full_name, email,
+CASE 
+WHEN gender = 1 THEN 'Nam'
+ELSE 'Nữ'
+END AS Sex
+FROM customer;
+
+SELECT * FROM customer
+ORDER BY (NOW() - YEAR(dob)) LIMIT 3
