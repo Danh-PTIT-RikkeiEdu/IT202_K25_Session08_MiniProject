@@ -83,6 +83,19 @@ VALUES
 (4, 4, 2, 240000),
 (5, 6, 1, 2500000);
 
+set sql_safe_updates = 0;
+
+update Product
+set product_name = 'other'
+where product_id = 1;
+
+update customer
+set email = 'ngvantruon@gmail.com'
+where customer_id = 1;
+
+delete from orderDetail
+where Order_id = 1;
+
 -- 1
 SELECT full_name, email,
 CASE 
