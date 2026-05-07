@@ -82,3 +82,10 @@ VALUES
 (3, 3, 3, 1350000),
 (4, 4, 2, 240000),
 (5, 6, 1, 2500000);
+
+-- 5
+select * from product
+where product_price > (select avg(product_price) avg_price from product);
+
+-- 6
+select * from customer where customer_id not in (select customer_id from orderTable);
