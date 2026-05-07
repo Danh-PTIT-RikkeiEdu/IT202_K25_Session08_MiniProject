@@ -132,7 +132,7 @@ where product_price > (select avg(product_price) avg_price from product);
 -- 6
 select * from customer where customer_id not in (select customer_id from orderTable);
 
--- 7 
+-- 7 Quyên 
 SELECT 
     c.category_name,
     SUM(o.quantity * o.order_price) AS revenue
@@ -154,3 +154,29 @@ HAVING SUM(o.quantity * o.order_price) > (
         GROUP BY p.category_id
     ) t
 );
+
+-- 7 Danh
+-- Tính tổng giá trị doanh thu từng danh mục
+select sum(quantity * order_price) as sum_revenue_caterogy from orderDetail od 
+inner join product p on p.product_id = od.product_id
+group by p.category_id;
+
+-- Tính trung bình giá trị doanh thu của tất cả doanh mục
+select avg(sum_revenue_caterogy) as avg_revenue
+from 
+	(select sum(quantity * order_price) as sum_revenue_caterogy from orderDetail od 
+	inner join product p on p.product_id = od.product_id
+	group by p.category_id) as sum_revenue_caterogy_table;
+    
+-- Gom code
+select c.category_name, sum(od2.quantity * od2.order_price) as sum_revenue from orderDetail od2
+inner join product p2 on p2.product_id = od2.product_id
+inner join category c on c.category_id = p2.category_id
+group by c.category_name
+having 
+	sum(od2.quantity * od2.order_price) 
+    > (select avg(sum_revenue_caterogy) as avg_revenue
+		from 
+			(select sum(quantity * order_price) as sum_revenue_caterogy from orderDetail od 
+			inner join product p on p.product_id = od.product_id
+			group by p.category_id) as sum_revenue_caterogy_table) * 1.2;
