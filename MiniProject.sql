@@ -108,7 +108,7 @@ FROM customer;
 
 -- 2
 SELECT * FROM customer
-ORDER BY (YEAR(NOW()) - YEAR(dob)) ASC LIMIT 3
+ORDER BY (YEAR(NOW()) - YEAR(dob)) ASC LIMIT 3;
 
 -- 3
 SELECT o.order_id, o.order_date, c.full_name
@@ -131,3 +131,26 @@ where product_price > (select avg(product_price) avg_price from product);
 
 -- 6
 select * from customer where customer_id not in (select customer_id from orderTable);
+
+-- 7 
+SELECT 
+    c.category_name,
+    SUM(o.quantity * o.order_price) AS revenue
+FROM category c
+JOIN product p 
+    ON c.category_id = p.category_id
+JOIN orderDetail o 
+    ON p.product_id = o.product_id
+GROUP BY c.category_name
+HAVING SUM(o.quantity * o.order_price) > (
+    SELECT AVG(revenue) * 1.2
+    FROM (
+        SELECT 
+            p.category_id,
+            SUM(o.quantity * o.order_price) AS revenue
+        FROM product p
+        JOIN orderDetail o 
+            ON p.product_id = o.product_id
+        GROUP BY p.category_id
+    ) t
+);
