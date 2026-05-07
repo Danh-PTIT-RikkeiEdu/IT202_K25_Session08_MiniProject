@@ -180,3 +180,52 @@ having
 			(select sum(quantity * order_price) as sum_revenue_caterogy from orderDetail od 
 			inner join product p on p.product_id = od.product_id
 			group by p.category_id) as sum_revenue_caterogy_table) * 1.2;
+
+-- 8
+-- Lấy danh sách sản phẩm kèm theo danh mục
+select p.product_id, p.product_name, p.product_price, c.category_name from product p
+inner join category c on c.category_id = p.category_id;
+
+-- Lấy danh sách các sản phẩm có giá đắt nhất trong từng danh mục
+select p.product_id, p.product_name, p.product_price, c.category_name from product p
+inner join category c on c.category_id = p.category_id
+where p.product_price = (select max(p2.product_price) from product p2
+						where p.category_id = p2.category_id);	
+                        
+-- 9
+-- Dùng inner join
+select * from customer c 
+inner join orderTable ot on ot.customer_id = c.customer_id 
+inner join orderDetail od on od.order_id = ot.order_id 
+inner join product p on p.product_id = od.product_id 
+inner join category ct on ct.category_id = p.category_id
+where ct.category_name = 'Dien tu';
+
+-- Dùng lồng nhiều cấp 
+-- 1. Lấy id danh mục điện tử
+select c.category_id from category c where c.category_name = 'Dien tu';
+
+-- 2. Lấy id thông tin sản phẩm, lồng 1
+select p.product_id from product p
+where p.category_id in (select c.category_id from category c where c.category_name = 'Dien tu');
+
+-- 3. Lấy id chi tiết đơn hàng, lồng 2
+select od.order_id from orderDetail od
+where od.product_id in (select p.product_id from product p
+					   where p.category_id in (select c.category_id from category c 
+											  where c.category_name = 'Dien tu'));
+
+-- 4. Lấy id đơn hàng, lồng 3
+select ot.order_id from orderTable ot
+where ot.order_id in (select od.order_id from orderDetail od
+						where od.product_id in (select p.product_id from product p
+												where p.category_id in (select c.category_id from category c 
+																		where c.category_name = 'Dien tu')));
+                                                                        
+-- 5. Lấy thông tin người dùng mua sp trong danh mục Điện tử, lồng 4
+select * from customer c
+where c.customer_id in (select ot.order_id from orderTable ot
+					where ot.order_id in (select od.order_id from orderDetail od
+											where od.product_id in (select p.product_id from product p
+																	where p.category_id in (select c.category_id from category c 
+																							where c.category_name = 'Dien tu'))));
