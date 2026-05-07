@@ -100,7 +100,8 @@ where Order_id = 1;
 SELECT full_name, email,
 CASE 
 WHEN gender = 1 THEN 'Nam'
-ELSE 'Nữ'
+WHEN gender = 0 THEN 'Nữ'
+ELSE 'Khác'
 END AS Sex
 FROM customer;
 
