@@ -110,6 +110,21 @@ FROM customer;
 SELECT * FROM customer
 ORDER BY (YEAR(NOW()) - YEAR(dob)) ASC LIMIT 3
 
+-- 3
+SELECT o.order_id, o.order_date, c.full_name
+FROM orderTable o
+INNER JOIN customer c
+ON o.customer_id = c.customer_id;
+
+
+-- 4
+SELECT c.category_name, COUNT(p.product_id) AS total_product
+FROM category c
+INNER JOIN product p
+ON c.category_id = p.category_id
+GROUP BY c.category_id, c.category_name
+HAVING COUNT(p.product_id) >= 2;
+
 -- 5
 select * from product
 where product_price > (select avg(product_price) avg_price from product);
