@@ -86,7 +86,7 @@ VALUES
 set sql_safe_updates = 0;
 
 update Product
-set product_name = 'other'
+set product_price = 10000000000
 where product_id = 1;
 
 update customer
